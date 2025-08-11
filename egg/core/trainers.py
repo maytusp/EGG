@@ -332,3 +332,43 @@ class Trainer:
 
         if latest_file is not None:
             self.load_from_checkpoint(latest_file)
+
+
+
+class PopulationTrainer:
+    def __init__(
+        self,
+        games: List[torch.nn.Module],
+        optimizers: List[torch.optim.Optimizer],
+        train_data: DataLoader,
+        validation_data: Optional[DataLoader] = None,
+        n_epochs: int = 1000,
+        device: torch.device = None,
+        callbacks: Optional[List[Callback]] = None,
+    ):
+        self.trainers = [
+            Trainer(
+                game=game,
+                optimizer=optimizer,
+                train_data=train_data,
+                validation_data=validation_data,
+                device=device,
+                callbacks=callbacks,
+            )
+            for game, optimizer in zip(games, optimizers)
+        ]
+        self.n_epochs = n_epochs
+
+    def train(self):
+        for epoch in range(self.n_epochs):
+            print(f"\n### Epoch {epoch + 1} ###")
+            losses = []
+
+            for idx, trainer in enumerate(self.trainers):
+                # print(f"\nTraining pair {idx + 1}/{len(self.trainers)}")
+                train_loss, _ = trainer.train_epoch()
+                losses.append(train_loss)
+                # print(f"  Loss: {train_loss:.4f}")
+
+            avg_loss = sum(losses) / len(losses)
+            print(f"\n[Epoch {epoch + 1}] Average loss across all pairs: {avg_loss:.4f}")

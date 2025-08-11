@@ -49,7 +49,7 @@ from .reinforce_wrappers import (
     TransformerSenderReinforce,
 )
 from .rnn import RnnEncoder
-from .trainers import Trainer
+from .trainers import Trainer, PopulationTrainer
 from .util import (
     build_optimizer,
     close,
@@ -62,6 +62,7 @@ from .util import (
 
 __all__ = [
     "Trainer",
+    "PopulationTrainer",
     "get_opts",
     "init",
     "build_optimizer",

@@ -492,7 +492,6 @@ class SenderReceiverRnnGS(nn.Module):
     def forward(self, sender_input, labels, receiver_input=None, aux_input=None):
         message = self.sender(sender_input, aux_input)
         receiver_output = self.receiver(message, receiver_input, aux_input)
-
         loss = 0
         not_eosed_before = torch.ones(receiver_output.size(0)).to(
             receiver_output.device
